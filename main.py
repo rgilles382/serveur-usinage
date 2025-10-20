@@ -38,13 +38,13 @@ async def analyse(payload: FilePayload):
 
     headers = {"Authorization": f"Bearer {OPENAI_API_KEY}", "Content-Type": "application/json"}
     r = requests.post("https://api.openai.com/v1/chat/completions", json=body, headers=headers, timeout=120)
-       if r.status_code != 200:
-        print("❌ OpenAI error:", r.text)  # Affiche le message dans les logs Render
+          if r.status_code != 200:
+        print("❌ OpenAI error:", r.text)
         return {"error": "OpenAI error", "detail": r.text}
-
 
     result = r.json()
     content = result.get("choices", [{}])[0].get("message", {}).get("content", "")
     return {"estimation": content}
+
 
 
