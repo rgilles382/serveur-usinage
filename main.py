@@ -22,7 +22,7 @@ async def analyse(payload: FilePayload):
     )
 
     body = {
-        "model": "gpt-4o",
+        "model": "gpt-4-turbo",
         "messages": [
             {"role": "system", "content": "Tu es un technicien d'atelier expert en usinage."},
             {
@@ -46,3 +46,4 @@ async def analyse(payload: FilePayload):
     result = r.json()
     content = result.get("choices", [{}])[0].get("message", {}).get("content", "")
     return {"estimation": content}
+
