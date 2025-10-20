@@ -22,7 +22,7 @@ async def analyse(payload: FilePayload):
     )
 
     body = {
-        "model": "gpt-4-turbo",
+        "model": "gpt-4o",
         "messages": [
             {"role": "system", "content": "Tu es un technicien d'atelier expert en usinage."},
             {
@@ -38,13 +38,17 @@ async def analyse(payload: FilePayload):
 
     headers = {"Authorization": f"Bearer {OPENAI_API_KEY}", "Content-Type": "application/json"}
     r = requests.post("https://api.openai.com/v1/chat/completions", json=body, headers=headers, timeout=120)
-          if r.status_code != 200:
-        print("❌ OpenAI error:", r.text)
-        return {"error": "OpenAI error", "detail": r.text}
+
+    # 🔍 Diagnostic complet renvoyé à Apps Script
+    try:
+        r.raise_for_status()
+    except Exception:
+        return {
+            "error": "OpenAI error",
+            "status_code": r.status_code,
+            "response_text": r.text
+        }
 
     result = r.json()
     content = result.get("choices", [{}])[0].get("message", {}).get("content", "")
     return {"estimation": content}
-
-
-
